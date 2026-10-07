@@ -103,11 +103,10 @@ public class SellerDaoJDBC implements SellerDao{
 		finally {
 			DB.closeStatement(st);
 		}
-		
 	}
 
 	@Override
-	public Seller findById(Integer id) {
+	public Seller findById(Integer id) { // find the seller by his id
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {

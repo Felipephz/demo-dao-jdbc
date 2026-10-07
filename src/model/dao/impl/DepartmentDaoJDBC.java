@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import db.DB;
 import db.DbException;
@@ -34,12 +37,28 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
-		
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement(
+					"DELETE seller, department "
+					+ "FROM seller INNER JOIN department "
+					+ "ON seller.departmentId = department.Id "
+					+ " WHERE department.Id = ?");
+			
+			st.setInt(1, id);
+			
+			st.executeUpdate();
+			
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+		}
 	}
 
 	@Override
-	public Department findById(Integer id) {
+	public Department findById(Integer id) { //find the department by his id
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		try {
@@ -74,8 +93,40 @@ public class DepartmentDaoJDBC implements DepartmentDao{
 
 	@Override
 	public List<Department> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement(
+					"SELECT department.* "
+					+ "FROM department " 
+					+ "ORDER BY Name ");
+			
+			rs = st.executeQuery();
+			
+			List<Department> list = new ArrayList<>();
+			Map<Integer, Department> map = new HashMap<>();
+			
+			while (rs.next()) {
+				
+				Department dep = map.get(rs.getInt("Id")); // check if there is already the department with a id that you send
+				
+				if (dep == null) {
+					dep = instantiateDepartment(rs); // if doesn't exist it will instantiate the department
+					map.put(rs.getInt("Id"), dep); // put the department in the map
+				}
+				
+				Department obj = instantiateDepartment(rs);
+				list.add(obj);
+			}
+			return list;
+		}
+		catch (SQLException e) {
+			throw new DbException (e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
 	}
 
 }
