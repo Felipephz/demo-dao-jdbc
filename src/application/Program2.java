@@ -24,12 +24,18 @@ public class Program2 {
 			System.out.println(obj);
 		}
 		
-		System.out.println("\n=== Test 3: department delete ===");
+		System.out.println("\n=== Test 3: department insert ===");
+		Department newDepartment = new Department(null, "Carpintaria");
+		departmentDao.insert(newDepartment);
+		System.out.println("Inserted! New id: " + newDepartment.getId());
+		
+		System.out.println("\n=== Test 4: department delete ===");
 		System.out.print("Enter id for delete test: ");
 		int id = sc.nextInt();
 		departmentDao.deleteById(id);
 		System.out.println("Deleted completed");
 		
 		sc.close();
+
 	}
 }
