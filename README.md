@@ -1,0 +1,1 @@
+Project from the course of Java UDEMY about acess to the data base with JDBC (Java Database Connectivity), standard API from Java which allows Java applications to connect and interact with relational databases such as MySQL, Oracle, and SQL Server
